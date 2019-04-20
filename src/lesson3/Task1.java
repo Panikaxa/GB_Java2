@@ -15,9 +15,7 @@ public class Task1 {
         System.out.println();
         System.out.println("***********Display unique words*****************");
         Set<String> uniqueList = new TreeSet<>(Arrays.asList(wordArray));
-        for (String uniqueElement : uniqueList) {
-            System.out.print(uniqueElement + " ");
-        }
+        System.out.print(uniqueList.toString());
 
         System.out.println();
         System.out.println("***********Display the number of duplicates*****************");

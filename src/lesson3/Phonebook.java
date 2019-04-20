@@ -15,9 +15,7 @@ public class Phonebook {
 
     public void get(String name){
         if (hashMap.containsKey(name)) {
-            for (Map.Entry<String, List<String>> item : hashMap.entrySet()) {
-                if (item.getKey().equals(name)) System.out.println(name + ": " + item.getValue());
-            }
+            System.out.println(name + " " + hashMap.get(name).toString());
         } else {
             System.out.println(name + " is not in the phonebook");
         }
