@@ -1,11 +1,9 @@
 package lesson5;
 
 public class ProgramLauncher {
-    static final int SIZE = 10000000;
+    private static final int SIZE = 10000000;
     static final int HALF = SIZE / 2;
-    static float[] array = new float[SIZE];
-    static float[] tempArray1 = new float[HALF];
-    static float[] tempArray2 = new float[HALF];
+    private static float[] array = new float[SIZE];
 
     public static void main(String[] args) {
         fillArray();
@@ -17,20 +15,32 @@ public class ProgramLauncher {
     private static void simpleCalc(){
         long timeStart = System.currentTimeMillis();
         for (int i = 0; i < SIZE; i++) {
-            array[i] = (float) (array[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
+            array[i] = calc(i);
         }
         long timeFinish = System.currentTimeMillis();
         System.out.println("simpleCalc execution time: " + (timeFinish - timeStart) + " ms");
     }
 
     private static void threadCalc(){
+        float[] tempArray1 = new float[HALF];
         long timeStart = System.currentTimeMillis();
         System.arraycopy(array, 0, tempArray1, 0, HALF);
-        System.arraycopy(array, HALF, tempArray2, 0, HALF);
-        new FirstThread().start();
-        new SecondThread().start();
+        CalcThread firstThread = new CalcThread(tempArray1);
+        System.arraycopy(array, HALF, tempArray1, 0, HALF);
+        CalcThread secondThread = new CalcThread(tempArray1);
+
+        firstThread.start();
+        secondThread.start();
+        try {
+            firstThread.join();
+            secondThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        tempArray1 = firstThread.getTempArray();
         System.arraycopy(tempArray1, 0, array, 0, HALF);
-        System.arraycopy(tempArray2, 0, array, HALF, HALF);
+        tempArray1 = secondThread.getTempArray();
+        System.arraycopy(tempArray1, 0, array, HALF, HALF);
         long timeFinish = System.currentTimeMillis();
         System.out.println("threadCalc execution time: " + (timeFinish - timeStart) + " ms");
     }
@@ -39,5 +49,9 @@ public class ProgramLauncher {
         for (int i = 0; i < SIZE; i++) {
             array[i] = 1;
         }
+    }
+
+    public static float calc(int i){
+        return (float)(array[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
     }
 }
