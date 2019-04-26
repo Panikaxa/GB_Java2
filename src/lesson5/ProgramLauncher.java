@@ -24,11 +24,27 @@ public class ProgramLauncher {
     }
 
     private static void threadCalc(){
+        Thread firstThread = new FirstThread();
+        Thread secondThread = new SecondThread();
         long timeStart = System.currentTimeMillis();
         System.arraycopy(array, 0, tempArray1, 0, HALF);
         System.arraycopy(array, HALF, tempArray2, 0, HALF);
-        new FirstThread().start();
-        new SecondThread().start();
+        firstThread.start();
+        secondThread.start();
+        if (firstThread.isAlive()){
+            try {
+                firstThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (secondThread.isAlive()){
+            try {
+                secondThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         System.arraycopy(tempArray1, 0, array, 0, HALF);
         System.arraycopy(tempArray2, 0, array, HALF, HALF);
         long timeFinish = System.currentTimeMillis();
