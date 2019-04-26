@@ -22,12 +22,12 @@ public class ProgramLauncher {
     }
 
     private static void threadCalc(){
-        float[] tempArray1 = new float[HALF];
+        float[] tempArray = new float[HALF];
         long timeStart = System.currentTimeMillis();
-        System.arraycopy(array, 0, tempArray1, 0, HALF);
-        CalcThread firstThread = new CalcThread(tempArray1);
-        System.arraycopy(array, HALF, tempArray1, 0, HALF);
-        CalcThread secondThread = new CalcThread(tempArray1);
+        System.arraycopy(array, 0, tempArray, 0, HALF);
+        CalcThread firstThread = new CalcThread(tempArray);
+        System.arraycopy(array, HALF, tempArray, 0, HALF);
+        CalcThread secondThread = new CalcThread(tempArray);
 
         firstThread.start();
         secondThread.start();
@@ -37,10 +37,10 @@ public class ProgramLauncher {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        tempArray1 = firstThread.getTempArray();
-        System.arraycopy(tempArray1, 0, array, 0, HALF);
-        tempArray1 = secondThread.getTempArray();
-        System.arraycopy(tempArray1, 0, array, HALF, HALF);
+        tempArray = firstThread.getTempArray();
+        System.arraycopy(tempArray, 0, array, 0, HALF);
+        tempArray = secondThread.getTempArray();
+        System.arraycopy(tempArray, 0, array, HALF, HALF);
         long timeFinish = System.currentTimeMillis();
         System.out.println("threadCalc execution time: " + (timeFinish - timeStart) + " ms");
     }
