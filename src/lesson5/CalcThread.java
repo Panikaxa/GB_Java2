@@ -8,7 +8,7 @@ public class CalcThread extends Thread {
     }
     @Override
     public void run() {
-        for (int i = 0; i < ProgramLauncher.HALF; i++) {
+        for (int i = 0; i < ProgramLauncher.getHALF(); i++) {
             tempArray[i] = ProgramLauncher.calc(i);
         }
     }

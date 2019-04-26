@@ -28,7 +28,6 @@ public class ProgramLauncher {
         CalcThread firstThread = new CalcThread(tempArray);
         System.arraycopy(array, HALF, tempArray, 0, HALF);
         CalcThread secondThread = new CalcThread(tempArray);
-
         firstThread.start();
         secondThread.start();
         try {
@@ -53,5 +52,9 @@ public class ProgramLauncher {
 
     public static float calc(int i){
         return (float)(array[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
+    }
+
+    public static int getHALF() {
+        return HALF;
     }
 }
