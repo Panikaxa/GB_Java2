@@ -17,6 +17,7 @@ public class Client extends JFrame {
     private  String login;
     private  String pass;
     private  JTextArea jTextArea;
+    private Timer timer;
 
     public Client() {
         prepareMainGui();
@@ -200,7 +201,12 @@ public class Client extends JFrame {
 
     private void start(){
         try {
+            timer = new Timer(120000, e -> {
+                closeConnection();
+                timer.stop();
+            });
             socket = new Socket(SERVER_ADDR, SERVER_PORT);
+            timer.start();
             System.out.println("We have the connection...");
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
@@ -210,6 +216,7 @@ public class Client extends JFrame {
                         String strFromServer = in.readUTF();
                         if (strFromServer.startsWith("/authok")) {
                             jTextArea.append("Authorization is ok" + "\n");
+                            timer.stop();
                             break;
                         }
                         jTextArea.append(strFromServer + "\n");
@@ -259,6 +266,9 @@ public class Client extends JFrame {
     }
 
     public void onAuthClick() {
+        if (socket == null || socket.isClosed()) {
+            start();
+        }
         try {
             out.writeUTF("/auth " + login + " " + pass);
         } catch (Exception e) {
